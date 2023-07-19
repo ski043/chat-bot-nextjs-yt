@@ -9,7 +9,7 @@ const config = new Configuration({
 
 const openai = new OpenAIApi(config);
 
-//export const runtime = "edge";
+export const runtime = "edge";
 
 export async function POST(req: Request) {
   const { messages } = await req.json();
@@ -20,16 +20,7 @@ export async function POST(req: Request) {
     messages: messages,
   });
 
-  const stream = OpenAIStream(response, {
-    onCompletion: async (complestion: string) => {
-      const data = await prisma.message.create({
-        data: {
-          answer: complestion,
-          question: messages.slice(-1)[0].content,
-        },
-      });
-    },
-  });
+  const stream = OpenAIStream(response, {});
 
   return new StreamingTextResponse(stream);
 }
